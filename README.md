@@ -49,3 +49,19 @@ Optional flags:
 
 ```
 
+# Milestone 1:
+To compile:
+
+```
+make
+```
+
+To run:
+
+```
+./spmspm -d <dataset> -a          # Run sequential CPU version (kernelCPU0.cu)
+./spmspm -d <dataset> -0          # Run basic GPU version (kernel0.cu)
+./spmspm -v                       # (Optional) Run verification against reference
+./spmspm -w                       # (Optional) Write output to file
+
+```
