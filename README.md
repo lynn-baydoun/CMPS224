@@ -59,6 +59,11 @@ make
 To run:
 
 ```
+<<<<<<< HEAD
 ./spmspm -d <dataset> -a          # Run sequential CPU version (kernelCPU0.cu)
 
 ```
+=======
+./spmspm -d <dataset> -a
+```
+>>>>>>> 3debebdee4ff2b9435b070e1f5d9325f0324efd0
