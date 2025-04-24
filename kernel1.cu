@@ -12,10 +12,10 @@ __global__ void kernel1(CSRMatrix d_csrA, CSCMatrix d_cscB, unsigned int* d_rows
     float acc[MAX_COLS] = {0};
 
     for (int idxA = d_csrA.rowPtrs[row]; idxA < d_csrA.rowPtrs[row + 1]; idxA++) {
-        int a_col = d_csrA.colIndices[idxA];
+        int a_col = d_csrA.colIdxs[idxA];
         float a_val = d_csrA.values[idxA];
         for (int idxB = d_cscB.colPtrs[a_col]; idxB < d_cscB.colPtrs[a_col + 1]; idxB++) {
-            int b_col = d_cscB.rowIndices[idxB];
+            int b_col = d_cscB.rowIdxs[idxB];
             float b_val = d_cscB.values[idxB];
             acc[b_col] += a_val * b_val;
         }
@@ -55,12 +55,12 @@ void spmspm_gpu1(COOMatrix* cooMatrix1, CSRMatrix* csrMatrix1, CSCMatrix* cscMat
     cudaMemcpy(&h_nnz, d_nnzCounter, sizeof(unsigned int), cudaMemcpyDeviceToHost);
 
     cooMatrix3->numNonzeros = h_nnz;
-    cudaMallocHost(&cooMatrix3->rows, h_nnz * sizeof(unsigned int));
-    cudaMallocHost(&cooMatrix3->cols, h_nnz * sizeof(unsigned int));
+    cudaMallocHost(&cooMatrix3->rowIdxs, h_nnz * sizeof(unsigned int));
+    cudaMallocHost(&cooMatrix3->colIdxs, h_nnz * sizeof(unsigned int));
     cudaMallocHost(&cooMatrix3->values, h_nnz * sizeof(float));
 
-    cudaMemcpy(cooMatrix3->rows, d_rows, h_nnz * sizeof(unsigned int), cudaMemcpyDeviceToHost);
-    cudaMemcpy(cooMatrix3->cols, d_cols, h_nnz * sizeof(unsigned int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cooMatrix3->rowIdxs, d_rows, h_nnz * sizeof(unsigned int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(cooMatrix3->colIdxs, d_cols, h_nnz * sizeof(unsigned int), cudaMemcpyDeviceToHost);
     cudaMemcpy(cooMatrix3->values, d_vals, h_nnz * sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(d_rows);
@@ -68,4 +68,3 @@ void spmspm_gpu1(COOMatrix* cooMatrix1, CSRMatrix* csrMatrix1, CSCMatrix* cscMat
     cudaFree(d_vals);
     cudaFree(d_nnzCounter);
 }
-
